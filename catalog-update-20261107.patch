@@ -1,0 +1,879 @@
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+index c0129d5..98d4c30 100644
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -17,6 +17,17 @@ The source of truth is [`data/papers.json`](data/papers.json). Keep full author
+ 
+ Save bibliographic query responses or an equivalent evidence record in a dated `metadata/` directory. The existing manuscript audits are fixed historical snapshots; a catalog addition does not change them.
+ 
++When a formal PMLR version adds authors that are absent from the linked DBLP
++preprint record, keep the final ordered author list and set
++`publication_author_source` to the same proceedings URL as `paper_url` and
++`publication_source`. Save a `publication_author_evidence` record containing that
++URL, the verified DBLP identity, title, authors, venue, year, publisher, and the
++PMLR page's `citation_metadata` fields in the
++dated metadata directory. The checker still verifies the DBLP identity and title,
++and requires its original authors to remain in the same relative order. Missing
++evidence, different identities or titles, and unsupported author changes fail;
++use curator review for other changes.
++
+ ```sh
+ python3 scripts/render_catalog.py
+ python3 scripts/render_catalog.py --check
+diff --git a/README.md b/README.md
+index 424559f..15ec47e 100644
+--- a/README.md
++++ b/README.md
+@@ -5,9 +5,9 @@
+ 
+ **Retrieval-augmented understanding, generation and embodied intelligence**
+ 
+-![Papers](https://img.shields.io/badge/papers-175-405B76)
++![Papers](https://img.shields.io/badge/papers-179-405B76)
+ ![DBLP verified](https://img.shields.io/badge/identity-DBLP%20verified-50766B)
+-![Updated](https://img.shields.io/badge/updated-2026-10-19-777777)
++![Updated](https://img.shields.io/badge/updated-2026-11-07-777777)
+ 
+ [Survey](https://arxiv.org/abs/2503.18016) · [Paper list](#paper-list) · [JSON](data/papers.json) · [CSV](data/papers.csv) · [BibTeX](data/papers.bib) · [Contribute](CONTRIBUTING.md)
+ 
+@@ -15,7 +15,7 @@
+ 
+ A curated research guide to **how retrieved evidence, exemplars, visual references and memory support vision models**. Covers images, documents, video, medical applications, visual synthesis, 3D and embodied agents.
+ 
+-**175 unique papers · 114 proceedings/journal papers · 61 preprints · 12 categories.** Every entry has a direct DBLP record. A linked proceedings page supplies formal venue evidence where only the preprint is indexed in DBLP. Conference and preprint versions count once.
++**179 unique papers · 116 proceedings/journal papers · 63 preprints · 12 categories.** Every entry has a direct DBLP record. A linked proceedings page supplies formal venue evidence where only the preprint is indexed in DBLP. Conference and preprint versions count once.
+ 
+ <p align="center"><img src="assets/acl-figures/overview.png" alt="Four roles of retrieved information: evidence, exemplars, synthesis references and embodied memory" width="100%"></p>
+ 
+@@ -67,13 +67,13 @@ Use GitHub's page search (**Ctrl/Cmd + F**) to find a title or method. For filte
+ | [Benchmarks, datasets and evaluation](#evaluation) | 27 |
+ | [Visual understanding and multimodal reasoning](#understanding) | 40 |
+ | [Document understanding](#documents) | 13 |
+-| [Video understanding](#video) | 15 |
++| [Video understanding](#video) | 18 |
+ | [Medical vision and clinical documents](#medical) | 8 |
+ | [Image and video generation](#synthesis) | 17 |
+ | [3D scenes and motion generation](#3d) | 6 |
+ | [Embodied memory, navigation and driving](#embodied) | 12 |
+ | [Domain applications](#applications) | 6 |
+-| [Retrieval and reranking components](#retrieval) | 9 |
++| [Retrieval and reranking components](#retrieval) | 10 |
+ | [Foundations and related techniques](#background) | 14 |
+ 
+ <a id="surveys"></a>
+@@ -204,7 +204,10 @@ Includes general VQA/document datasets used in RAG studies; inclusion does not m
+ | [Decoupling Semantics and Logic: A Training-Free Coarse-to-Fine Pipeline for Video Retrieval-Augmented Generation](https://doi.org/10.48550/ARXIV.2606.07924)<br><sub>Jiaxin Dai et al.</sub> | arXiv 2026 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2606-07924) · [arXiv](https://arxiv.org/abs/2606.07924) |
+ | [MARQUIS: A Three-Stage Pipeline for Video Retrieval-Augmented Generation](https://aclanthology.org/2026.magmar-main.13/)<br><sub>Debashish Chakraborty et al.</sub> | MAGMaR @ ACL 2026 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2605-17640) · [arXiv](https://arxiv.org/abs/2605.17640) |
+ | [Multi-RAG: A Multimodal Retrieval-Augmented Generation System for Adaptive Video Understanding](https://doi.org/10.1007/978-981-92-1947-6_30)<br><sub>Mingyang Mao et al.</sub> | PAKDD (Data Science 2) 2026 | Method | [DBLP](https://dblp.org/rec/conf/pakdd/MaoPKWLM26) · [arXiv](https://arxiv.org/abs/2505.23990) |
++| [TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs](https://arxiv.org/abs/2607.17423)<br><sub>Yuhan Zhu et al.</sub><br><sub>Generalist temporal-evidence localization.</sub> | arXiv 2026 | Component | [DBLP](https://dblp.org/rec/journals/corr/abs-2607-17423) · [Code](https://github.com/MCG-NJU/TimeLens2) |
+ | [TRACE: Evidence Grounding-Guided Multi-Video Event Understanding and Claim Generation](https://aclanthology.org/2026.magmar-main.14/)<br><sub>Pengyu Yan et al.</sub> | MAGMaR @ ACL 2026 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2605-16740) · [arXiv](https://arxiv.org/abs/2605.16740) |
++| [Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning](https://proceedings.mlr.press/v306/zeng26y.html)<br><sub>Xiangyu Zeng et al.</sub><br><sub>Within-video visual evidence seeking with native interleaved tool calls for multi-hop question answering.</sub> | ICML 2026 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2601-23224) · [Code](https://github.com/MCG-NJU/Video-o3) · [arXiv](https://arxiv.org/abs/2601.23224) |
++| [VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding](https://arxiv.org/abs/2607.14935)<br><sub>Xinhao Li et al.</sub><br><sub>Generalist video MLLM with explicitly evaluated single- and multi-interval temporal grounding.</sub> | arXiv 2026 | Component | [DBLP](https://dblp.org/rec/journals/corr/abs-2607-14935) · [Code](https://github.com/MCG-NJU/VideoChat3) |
+ | [SceneRAG: Scene-level Retrieval-Augmented Generation for Video Understanding](https://doi.org/10.48550/ARXIV.2506.07600)<br><sub>Nianbo Zeng et al.</sub> | arXiv 2025 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2506-07600) · [arXiv](https://arxiv.org/abs/2506.07600) |
+ | [Streaming Video Understanding and Multi-round Interaction with Memory-enhanced Knowledge](https://openreview.net/forum?id=JbPb6RieNC)<br><sub>Haomiao Xiong et al.</sub> | ICLR 2025 | Method | [DBLP](https://dblp.org/rec/conf/iclr/XiongYYZ0ZL25) · [arXiv](https://arxiv.org/abs/2501.13468) |
+ | [StreamingRAG: Real-time Contextual Retrieval and Generation Framework](https://doi.org/10.48550/ARXIV.2501.14101)<br><sub>Murugan Sankaradas et al.</sub> | arXiv 2025 | Method | [DBLP](https://dblp.org/rec/journals/corr/abs-2501-14101) · [arXiv](https://arxiv.org/abs/2501.14101) |
+@@ -306,6 +309,7 @@ Includes general VQA/document datasets used in RAG studies; inclusion does not m
+ 
+ | Paper / first author | Publication | Role | Resources |
+ |---|---|---|---|
++| [FreeRet: MLLMs as Training-Free Retrievers](https://proceedings.mlr.press/v306/zhu26ba.html)<br><sub>Yuhan Zhu et al.</sub><br><sub>Training-free multimodal embedding retrieval and multiple-choice reranking; a retrieval component using a generative MLLM.</sub> | ICML 2026 | Component | [DBLP](https://dblp.org/rec/journals/corr/abs-2509-24621) · [Code](https://github.com/MCG-NJU/FreeRet) · [arXiv](https://arxiv.org/abs/2509.24621) |
+ | [MIDR: Enrichment-Augmented Indexing for Multimodal Document Retrieval](https://doi.org/10.48550/ARXIV.2609.01316)<br><sub>Debanjan Mahata et al.</sub> | arXiv 2026 | Component | [DBLP](https://dblp.org/rec/journals/corr/abs-2609-01316) · [arXiv](https://arxiv.org/abs/2609.01316) |
+ | [Region-R1: Reinforcing Query-Side Region Cropping for Multi-Modal Re-Ranking](https://aclanthology.org/2026.findings-acl.510/)<br><sub>Chan-Wei Hu et al.</sub> | Findings of ACL 2026 | Component | [DBLP](https://dblp.org/rec/conf/acl/HuT26) · [arXiv](https://arxiv.org/abs/2604.05268) |
+ | [A Multi-Granularity Retrieval Framework for Visually-Rich Documents](https://doi.org/10.48550/ARXIV.2505.01457)<br><sub>Mingjun Xu et al.</sub> | arXiv 2025 | Component | [DBLP](https://dblp.org/rec/journals/corr/abs-2505-01457) · [arXiv](https://arxiv.org/abs/2505.01457) |
+diff --git a/data/papers.bib b/data/papers.bib
+index e407222..9520a88 100644
+--- a/data/papers.bib
++++ b/data/papers.bib
+@@ -1635,3 +1635,41 @@
+   url = {https://doi.org/10.1109/CVPRW63382.2024.00232},
+   biburl = {https://dblp.org/rec/conf/cvpr/ArefeenDUC22}
+ }
++
++@inproceedings{visionrag2026ca2213234e,
++  title = {{FreeRet: MLLMs as Training-Free Retrievers}},
++  author = {Yuhan Zhu and Xiangyu Zeng and Chenting Wang and Xinhao Li and Chunxu Liu and Yicheng Xu and Ziang Yan and Yi Wang and Limin Wang},
++  booktitle = {ICML},
++  year = {2026},
++  url = {https://proceedings.mlr.press/v306/zhu26ba.html},
++  biburl = {https://dblp.org/rec/journals/corr/abs-2509-24621}
++}
++
++@inproceedings{visionrag2026a3deb81bfd,
++  title = {{Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning}},
++  author = {Xiangyu Zeng and Zhiqiu Zhang and Yuhan Zhu and Xinhao Li and Zikang Wang and Changlian Ma and Qingyu Zhang and Zizheng Huang and Kun Ouyang and Tianxiang Jiang and Ziang Yan and Yi Wang and Hongjie Zhang and Yali Wang and Limin Wang},
++  booktitle = {ICML},
++  year = {2026},
++  url = {https://proceedings.mlr.press/v306/zeng26y.html},
++  biburl = {https://dblp.org/rec/journals/corr/abs-2601-23224}
++}
++
++@article{visionrag20264735dcae44,
++  title = {{TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs}},
++  author = {Yuhan Zhu and Changlian Ma and Xiangyu Zeng and Xinhao Li and Zhiqiu Zhang and Songze Li and Jun Zhang and Tianxiang Jiang and Yuandong Yang and Ziang Yan and Zikang Wang and Xinyu Chen and Haoran Chen and Shaowei Zhang and Limin Wang},
++  journal = {arXiv},
++  year = {2026},
++  url = {https://arxiv.org/abs/2607.17423},
++  biburl = {https://dblp.org/rec/journals/corr/abs-2607-17423},
++  note = {Preprint; not a peer-reviewed venue claim}
++}
++
++@article{visionrag20261466803ee9,
++  title = {{VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding}},
++  author = {Xinhao Li and Yuhan Zhu and Xiangyu Zeng and Yuhao Dong and Haoning Wu and Zhiqiu Zhang and Yuandong Yang and Changlian Ma and Qingyu Zhang and Yansong Shi and Xinyu Chen and Haoran Chen and Zizheng Huang and Jun Zhang and Kun Ouyang and Lin Sui and Ziang Yan and Yicheng Xu and Chenting Wang and Yinan He and Hongjie Zhang and Yi Wang and Yu Qiao and Yali Wang and Ziwei Liu and Kai Chen and Limin Wang},
++  journal = {arXiv},
++  year = {2026},
++  url = {https://arxiv.org/abs/2607.14935},
++  biburl = {https://dblp.org/rec/journals/corr/abs-2607-14935},
++  note = {Preprint; not a peer-reviewed venue claim}
++}
+diff --git a/data/papers.csv b/data/papers.csv
+index adaf2a2..0e3a3e6 100644
+--- a/data/papers.csv
++++ b/data/papers.csv
+@@ -174,3 +174,7 @@ conf/eccv/AtaallahSASZDZSE24,Goldfish: Vision-Language Understanding of Arbitrar
+ conf/cikm/ArefeenDUC24,iRAG: Advancing RAG for Videos with an Incremental Approach,Md Adnan Arefeen; Biplob Debnath; Md. Yusuf Sarwar Uddin; Srimat Chakradhar,2024,2024,CIKM,proceedings,video,Method,https://doi.org/10.1145/3627673.3680088,https://dblp.org/rec/conf/cikm/ArefeenDUC24,,2026-10-19,
+ conf/emnlp/ZhangZYML24,OmAgent: A Multi-modal Agent Framework for Complex Video Understanding with Task Divide-and-Conquer,Lu Zhang; Tiancheng Zhao; Heting Ying; Yibo Ma; Kyusong Lee,2024,2024,EMNLP,proceedings,video,Method,https://aclanthology.org/2024.emnlp-main.559,https://dblp.org/rec/conf/emnlp/ZhangZYML24,,2026-10-15,
+ conf/cvpr/ArefeenDUC22,ViTA: An Efficient Video-to-Text Algorithm using VLM for RAG-based Video Analysis System,Md Adnan Arefeen; Biplob Debnath; Md. Yusuf Sarwar Uddin; Srimat Chakradhar,2024,2024,CVPR Workshops,proceedings,video,Method,https://doi.org/10.1109/CVPRW63382.2024.00232,https://dblp.org/rec/conf/cvpr/ArefeenDUC22,,2026-10-19,
++journals/corr/abs-2509-24621,FreeRet: MLLMs as Training-Free Retrievers,Yuhan Zhu; Xiangyu Zeng; Chenting Wang; Xinhao Li; Chunxu Liu; Yicheng Xu; Ziang Yan; Yi Wang; Limin Wang,2026,2026,ICML,proceedings,retrieval,Component,https://proceedings.mlr.press/v306/zhu26ba.html,https://dblp.org/rec/journals/corr/abs-2509-24621,https://github.com/MCG-NJU/FreeRet,2026-11-07,Training-free multimodal embedding retrieval and multiple-choice reranking; a retrieval component using a generative MLLM.
++journals/corr/abs-2601-23224,Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning,Xiangyu Zeng; Zhiqiu Zhang; Yuhan Zhu; Xinhao Li; Zikang Wang; Changlian Ma; Qingyu Zhang; Zizheng Huang; Kun Ouyang; Tianxiang Jiang; Ziang Yan; Yi Wang; Hongjie Zhang; Yali Wang; Limin Wang,2026,2026,ICML,proceedings,video,Method,https://proceedings.mlr.press/v306/zeng26y.html,https://dblp.org/rec/journals/corr/abs-2601-23224,https://github.com/MCG-NJU/Video-o3,2026-11-07,Within-video visual evidence seeking with native interleaved tool calls for multi-hop question answering.
++journals/corr/abs-2607-17423,TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs,Yuhan Zhu; Changlian Ma; Xiangyu Zeng; Xinhao Li; Zhiqiu Zhang; Songze Li; Jun Zhang; Tianxiang Jiang; Yuandong Yang; Ziang Yan; Zikang Wang; Xinyu Chen; Haoran Chen; Shaowei Zhang; Limin Wang,2026,2026,arXiv,preprint,video,Component,https://arxiv.org/abs/2607.17423,https://dblp.org/rec/journals/corr/abs-2607-17423,https://github.com/MCG-NJU/TimeLens2,2026-11-07,Generalist temporal-evidence localization.
++journals/corr/abs-2607-14935,VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding,Xinhao Li; Yuhan Zhu; Xiangyu Zeng; Yuhao Dong; Haoning Wu; Zhiqiu Zhang; Yuandong Yang; Changlian Ma; Qingyu Zhang; Yansong Shi; Xinyu Chen; Haoran Chen; Zizheng Huang; Jun Zhang; Kun Ouyang; Lin Sui; Ziang Yan; Yicheng Xu; Chenting Wang; Yinan He; Hongjie Zhang; Yi Wang; Yu Qiao; Yali Wang; Ziwei Liu; Kai Chen; Limin Wang,2026,2026,arXiv,preprint,video,Component,https://arxiv.org/abs/2607.14935,https://dblp.org/rec/journals/corr/abs-2607-14935,https://github.com/MCG-NJU/VideoChat3,2026-11-07,Generalist video MLLM with explicitly evaluated single- and multi-interval temporal grounding.
+diff --git a/data/papers.json b/data/papers.json
+index 4289139..5a83aa8 100644
+--- a/data/papers.json
++++ b/data/papers.json
+@@ -1,5 +1,5 @@
+ {
+-  "updated": "2026-10-19",
++  "updated": "2026-11-07",
+   "scope": "Targeted bibliographically verified catalog; not an exhaustive systematic review.",
+   "papers": [
+     {
+@@ -5971,6 +5971,196 @@
+       "legacy_row_indices": [
+         38
+       ]
++    },
++    {
++      "id": "journals/corr/abs-2509-24621",
++      "title": "FreeRet: MLLMs as Training-Free Retrievers",
++      "authors": [
++        "Yuhan Zhu",
++        "Xiangyu Zeng",
++        "Chenting Wang",
++        "Xinhao Li",
++        "Chunxu Liu",
++        "Yicheng Xu",
++        "Ziang Yan",
++        "Yi Wang",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "ICML",
++      "publication_status": "proceedings",
++      "category": "retrieval",
++      "role": "Component",
++      "paper_url": "https://proceedings.mlr.press/v306/zhu26ba.html",
++      "publication_source": "https://proceedings.mlr.press/v306/zhu26ba.html",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2509-24621",
++      "dblp_records": [
++        "https://dblp.org/rec/journals/corr/abs-2509-24621"
++      ],
++      "preprint_urls": [
++        "https://arxiv.org/abs/2509.24621"
++      ],
++      "title_aliases": [],
++      "code_url": "https://github.com/MCG-NJU/FreeRet",
++      "code_source": "https://github.com/MCG-NJU/FreeRet",
++      "verified_on": "2026-11-07",
++      "verification": "DBLP identity and signatures queried through its official SPARQL service; formal title and ordered authors verified against PMLR proceedings",
++      "manuscript_citation_keys": [],
++      "legacy_row_indices": [],
++      "publication_author_source": "https://proceedings.mlr.press/v306/zhu26ba.html",
++      "note": "Training-free multimodal embedding retrieval and multiple-choice reranking; a retrieval component using a generative MLLM."
++    },
++    {
++      "id": "journals/corr/abs-2601-23224",
++      "title": "Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning",
++      "authors": [
++        "Xiangyu Zeng",
++        "Zhiqiu Zhang",
++        "Yuhan Zhu",
++        "Xinhao Li",
++        "Zikang Wang",
++        "Changlian Ma",
++        "Qingyu Zhang",
++        "Zizheng Huang",
++        "Kun Ouyang",
++        "Tianxiang Jiang",
++        "Ziang Yan",
++        "Yi Wang",
++        "Hongjie Zhang",
++        "Yali Wang",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "ICML",
++      "publication_status": "proceedings",
++      "category": "video",
++      "role": "Method",
++      "paper_url": "https://proceedings.mlr.press/v306/zeng26y.html",
++      "publication_source": "https://proceedings.mlr.press/v306/zeng26y.html",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2601-23224",
++      "dblp_records": [
++        "https://dblp.org/rec/journals/corr/abs-2601-23224"
++      ],
++      "preprint_urls": [
++        "https://arxiv.org/abs/2601.23224"
++      ],
++      "title_aliases": [],
++      "code_url": "https://github.com/MCG-NJU/Video-o3",
++      "code_source": "https://github.com/MCG-NJU/Video-o3",
++      "verified_on": "2026-11-07",
++      "verification": "DBLP identity and signatures queried through its official SPARQL service; formal title and ordered authors verified against PMLR proceedings",
++      "manuscript_citation_keys": [],
++      "legacy_row_indices": [],
++      "candidate_collection": "Temporal regions of the supplied video accessible through VideoCrop",
++      "retrieved_unit": "Adaptive visual observations from requested temporal windows",
++      "downstream_use": "Multi-hop long-video question answering",
++      "note": "Within-video visual evidence seeking with native interleaved tool calls for multi-hop question answering."
++    },
++    {
++      "id": "journals/corr/abs-2607-17423",
++      "title": "TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs",
++      "authors": [
++        "Yuhan Zhu",
++        "Changlian Ma",
++        "Xiangyu Zeng",
++        "Xinhao Li",
++        "Zhiqiu Zhang",
++        "Songze Li",
++        "Jun Zhang",
++        "Tianxiang Jiang",
++        "Yuandong Yang",
++        "Ziang Yan",
++        "Zikang Wang",
++        "Xinyu Chen",
++        "Haoran Chen",
++        "Shaowei Zhang",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "arXiv",
++      "publication_status": "preprint",
++      "category": "video",
++      "role": "Component",
++      "paper_url": "https://arxiv.org/abs/2607.17423",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2607-17423",
++      "dblp_records": [
++        "https://dblp.org/rec/journals/corr/abs-2607-17423"
++      ],
++      "preprint_urls": [
++        "https://arxiv.org/abs/2607.17423"
++      ],
++      "title_aliases": [],
++      "code_url": "https://github.com/MCG-NJU/TimeLens2",
++      "code_source": "https://github.com/MCG-NJU/TimeLens2",
++      "verified_on": "2026-11-07",
++      "verification": "Official DBLP SPARQL identity and ordered signatures matched to current arXiv authors",
++      "manuscript_citation_keys": [],
++      "legacy_row_indices": [],
++      "candidate_collection": "Temporal content of the supplied video",
++      "retrieved_unit": "Query-supported temporal evidence intervals",
++      "downstream_use": "Temporal evidence localization for grounded video understanding",
++      "note": "Generalist temporal-evidence localization."
++    },
++    {
++      "id": "journals/corr/abs-2607-14935",
++      "title": "VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding",
++      "authors": [
++        "Xinhao Li",
++        "Yuhan Zhu",
++        "Xiangyu Zeng",
++        "Yuhao Dong",
++        "Haoning Wu",
++        "Zhiqiu Zhang",
++        "Yuandong Yang",
++        "Changlian Ma",
++        "Qingyu Zhang",
++        "Yansong Shi",
++        "Xinyu Chen",
++        "Haoran Chen",
++        "Zizheng Huang",
++        "Jun Zhang",
++        "Kun Ouyang",
++        "Lin Sui",
++        "Ziang Yan",
++        "Yicheng Xu",
++        "Chenting Wang",
++        "Yinan He",
++        "Hongjie Zhang",
++        "Yi Wang",
++        "Yu Qiao",
++        "Yali Wang",
++        "Ziwei Liu",
++        "Kai Chen",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "arXiv",
++      "publication_status": "preprint",
++      "category": "video",
++      "role": "Component",
++      "paper_url": "https://arxiv.org/abs/2607.14935",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2607-14935",
++      "dblp_records": [
++        "https://dblp.org/rec/journals/corr/abs-2607-14935"
++      ],
++      "preprint_urls": [
++        "https://arxiv.org/abs/2607.14935"
++      ],
++      "title_aliases": [],
++      "code_url": "https://github.com/MCG-NJU/VideoChat3",
++      "code_source": "https://github.com/MCG-NJU/VideoChat3",
++      "verified_on": "2026-11-07",
++      "verification": "Official DBLP SPARQL identity and ordered signatures matched to current arXiv authors",
++      "manuscript_citation_keys": [],
++      "legacy_row_indices": [],
++      "candidate_collection": "Temporal content of the supplied video",
++      "retrieved_unit": "Query-supported temporal evidence intervals",
++      "downstream_use": "Temporal evidence localization for grounded video understanding",
++      "note": "Generalist video MLLM with explicitly evaluated single- and multi-interval temporal grounding."
+     }
+   ]
+ }
+diff --git a/metadata/catalog-update-20261107/README.md b/metadata/catalog-update-20261107/README.md
+new file mode 100644
+index 0000000..21d400e
+--- /dev/null
++++ b/metadata/catalog-update-20261107/README.md
+@@ -0,0 +1,7 @@
++Bibliographic evidence collected on 7 November 2026 for FreeRet and Video-o3.
++
++The JSON responses preserve the official DBLP SPARQL properties and ordered author signatures. PMLR volume 306 and its individual paper pages verify both formal ICML 2026 publications and their full ordered author lists. The DBLP FreeRet preprint record has eight authors; the formal proceedings list has nine, adding Chunxu Liu while retaining the earlier authors in the same order. Its catalog record explicitly selects the verified PMLR author source. No DBLP response was altered to add this author.
++
++PMLR FreeRet: https://proceedings.mlr.press/v306/zhu26ba.html
++PMLR Video-o3: https://proceedings.mlr.press/v306/zeng26y.html
++DBLP endpoint: https://sparql.dblp.org/sparql
+diff --git a/metadata/catalog-update-20261107/dblp-authors.json b/metadata/catalog-update-20261107/dblp-authors.json
+new file mode 100644
+index 0000000..ebd7aec
+--- /dev/null
++++ b/metadata/catalog-update-20261107/dblp-authors.json
+@@ -0,0 +1 @@
++{"head":{"vars":["p","name","ordinal"]},"results":{"bindings":[{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Yuhan Zhu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Xiangyu Zeng 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Chenting Wang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Xinhao Li 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Yicheng Xu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"5"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Ziang Yan"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Yi Wang 0074"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"7"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"name":{"type":"literal","value":"Limin Wang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Xiangyu Zeng 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Zhiqiu Zhang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Yuhan Zhu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Xinhao Li 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Zikang Wang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"5"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Changlian Ma"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Qingyu Zhang 0006"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"7"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Zizheng Huang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Kun Ouyang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"9"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Tianxiang Jiang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"10"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Ziang Yan"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"11"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Yi Wang 0074"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"12"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Hongjie Zhang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"13"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Yali Wang 0001"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"14"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"name":{"type":"literal","value":"Limin Wang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}}]},"meta":{"query-time-ms":23,"result-size-total":23}}
+\ No newline at end of file
+diff --git a/metadata/catalog-update-20261107/dblp-properties.json b/metadata/catalog-update-20261107/dblp-properties.json
+new file mode 100644
+index 0000000..6efbd32
+--- /dev/null
++++ b/metadata/catalog-update-20261107/dblp-properties.json
+@@ -0,0 +1 @@
++{"head":{"vars":["p","property","value"]},"results":{"bindings":[{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn55745965"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn55745966"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Informal"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Publication"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://www.w3.org/2000/01/rdf-schema#label"},"value":{"type":"literal","value":"Yuhan Zhu et al.: FreeRet: MLLMs as Training-Free Retrievers. (2025)"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"http://dx.doi.org/10.48550/ARXIV.2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/391/5260"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/97/8640"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#bibtexType"},"value":{"type":"uri","value":"http://purl.org/net/nknouf/ns/bibtex#Article"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/391/5260"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/97/8640"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#documentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#doi"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745967"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745968"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745969"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745970"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745971"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745973"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745974"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn55745975"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#listedOnTocPage"},"value":{"type":"uri","value":"https://dblp.org/db/journals/corr/corr2509"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#monthOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gMonth","type":"literal","value":"--09"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#numberOfCreators"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#primaryDocumentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedIn"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournal"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournalVolume"},"value":{"type":"literal","value":"abs/2509.24621"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInStream"},"value":{"type":"uri","value":"https://dblp.org/streams/journals/corr"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#title"},"value":{"type":"literal","value":"FreeRet: MLLMs as Training-Free Retrievers."}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2509-24621"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#yearOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gYear","type":"literal","value":"2025"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn54234752"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn54234753"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Informal"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Publication"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://www.w3.org/2000/01/rdf-schema#label"},"value":{"type":"literal","value":"Xiangyu Zeng et al.: Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning. (2026)"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"http://dx.doi.org/10.48550/ARXIV.2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/01/773-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/135/8484"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/156/1626"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/286/0532"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/333/4073"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/63/5407-6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/89/3863-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#bibtexType"},"value":{"type":"uri","value":"http://purl.org/net/nknouf/ns/bibtex#Article"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/01/773-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/135/8484"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/156/1626"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/286/0532"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/333/4073"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/63/5407-6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/89/3863-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#documentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#doi"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234754"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234755"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234756"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234759"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234760"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234761"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234762"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234763"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234764"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234765"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234766"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234767"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234768"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234770"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54234771"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#listedOnTocPage"},"value":{"type":"uri","value":"https://dblp.org/db/journals/corr/corr2601"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#monthOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gMonth","type":"literal","value":"--01"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#numberOfCreators"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#primaryDocumentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedIn"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournal"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournalVolume"},"value":{"type":"literal","value":"abs/2601.23224"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInStream"},"value":{"type":"uri","value":"https://dblp.org/streams/journals/corr"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#title"},"value":{"type":"literal","value":"Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning."}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2601-23224"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#yearOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gYear","type":"literal","value":"2026"}}]},"meta":{"query-time-ms":11,"result-size-total":109}}
+\ No newline at end of file
+diff --git a/metadata/catalog-update-20261107/extra-dblp-authors.json b/metadata/catalog-update-20261107/extra-dblp-authors.json
+new file mode 100644
+index 0000000..39fc815
+--- /dev/null
++++ b/metadata/catalog-update-20261107/extra-dblp-authors.json
+@@ -0,0 +1 @@
++{"head":{"vars":["p","name","ordinal"]},"results":{"bindings":[{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Dingyu Yao"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Junhao Zhou"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Chenxu Yang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Chuanyu Qin"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Haowen Hou"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"5"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Zheming Liang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Congcong Wang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"7"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Yuhang Cao"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Shenglong Ye"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"9"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Shuai Xie"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"10"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Shuhuan Gu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"11"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Haoyang Huang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"12"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Qingyi Si"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"13"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Nan Duan 0001"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"14"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"name":{"type":"literal","value":"Jiaqi Wang 0003"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Xinhao Li 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yuhan Zhu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Xiangyu Zeng 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yuhao Dong"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Haoning Wu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"5"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Zhiqiu Zhang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yuandong Yang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"7"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Changlian Ma"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Qingyu Zhang 0006"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"9"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yansong Shi"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"10"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Xinyu Chen"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"11"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Haoran Chen"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"12"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Zizheng Huang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"13"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Jun Zhang 0106"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"14"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Kun Ouyang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Lin Sui"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"16"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Ziang Yan"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"17"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yicheng Xu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"18"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Chenting Wang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"19"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yinan He"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"20"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Hongjie Zhang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"21"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yi Wang 0074"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"22"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yu Qiao 0001"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"23"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Yali Wang 0001"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"24"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Ziwei Liu 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"25"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Kai Chen 0026"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"26"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"name":{"type":"literal","value":"Limin Wang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"27"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Yuhan Zhu"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Changlian Ma"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Xiangyu Zeng 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Xinhao Li 0004"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Zhiqiu Zhang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"5"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Songze Li"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Jun Zhang 0106"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"7"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Tianxiang Jiang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"8"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Yuandong Yang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"9"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Ziang Yan"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"10"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Zikang Wang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"11"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Xinyu Chen"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"12"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Haoran Chen"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"13"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Shaowei Zhang"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"14"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"name":{"type":"literal","value":"Limin Wang 0002"},"ordinal":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}}]},"meta":{"query-time-ms":9,"result-size-total":57}}
+\ No newline at end of file
+diff --git a/metadata/catalog-update-20261107/extra-dblp-properties.json b/metadata/catalog-update-20261107/extra-dblp-properties.json
+new file mode 100644
+index 0000000..ddcd790
+--- /dev/null
++++ b/metadata/catalog-update-20261107/extra-dblp-properties.json
+@@ -0,0 +1 @@
++{"head":{"vars":["p","property","value"]},"results":{"bindings":[{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn51066842"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn51066843"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Informal"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Publication"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://www.w3.org/2000/01/rdf-schema#label"},"value":{"type":"literal","value":"Dingyu Yao et al.: JoyAI-VL-Interaction: Real-Time Vision-Language Interaction Intelligence. (2026)"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"http://dx.doi.org/10.48550/ARXIV.2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/120/5872"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/127/1136"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/177/6718"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/182/5294"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/212/6480"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/227/6822"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/248/7736"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/248/9287"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/289/5554"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/30/8160-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/316/8012"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/386/7644"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/408/6759"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/426/5068"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/44/740-3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#bibtexType"},"value":{"type":"uri","value":"http://purl.org/net/nknouf/ns/bibtex#Article"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/120/5872"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/127/1136"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/177/6718"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/182/5294"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/212/6480"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/227/6822"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/248/7736"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/248/9287"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/289/5554"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/30/8160-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/316/8012"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/386/7644"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/408/6759"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/426/5068"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/44/740-3"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#documentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#doi"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066844"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066845"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066846"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066849"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066850"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066851"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066852"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066853"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066854"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066855"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066856"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066857"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066858"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066860"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn51066861"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#listedOnTocPage"},"value":{"type":"uri","value":"https://dblp.org/db/journals/corr/corr2606"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#monthOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gMonth","type":"literal","value":"--06"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#numberOfCreators"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#primaryDocumentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedIn"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournal"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournalVolume"},"value":{"type":"literal","value":"abs/2606.14777"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInStream"},"value":{"type":"uri","value":"https://dblp.org/streams/journals/corr"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#title"},"value":{"type":"literal","value":"JoyAI-VL-Interaction: Real-Time Vision-Language Interaction Intelligence."}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2606-14777"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#yearOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gYear","type":"literal","value":"2026"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn52246648"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn52246649"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Informal"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Publication"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://www.w3.org/2000/01/rdf-schema#label"},"value":{"type":"literal","value":"Xinhao Li et al.: VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding. (2026)"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"http://dx.doi.org/10.48550/ARXIV.2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/01/773-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/05/6300-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/156/1626"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/181/2839-26"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/232/7896"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/264/5802"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/286/0532"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/29/4190-106"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/290/3685"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/294/6639"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/391/5260"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/49/8410"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/63/5407-6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/89/3863-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/93/7763"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/96/3374"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/97/8640"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/98/5109"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/q/YuQiao1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#bibtexType"},"value":{"type":"uri","value":"http://purl.org/net/nknouf/ns/bibtex#Article"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/01/773-1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/05/6300-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/156/1626"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/17/221-74"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/181/2839-26"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/232/7896"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/264/5802"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/286/0532"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/29/4190-106"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/290/3685"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/294/6639"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/391/5260"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/49/8410"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/63/5407-6"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/89/3863-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/93/7763"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/96/3374"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/97/8640"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/98/5109"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/q/YuQiao1"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#documentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#doi"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246652"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246653"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246654"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246655"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246656"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246657"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246658"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246659"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246660"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246661"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246663"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246664"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246665"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246666"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246667"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246668"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246669"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246670"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246671"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246672"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246674"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246675"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246676"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246677"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246678"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246679"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn52246680"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#listedOnTocPage"},"value":{"type":"uri","value":"https://dblp.org/db/journals/corr/corr2607"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#monthOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gMonth","type":"literal","value":"--07"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#numberOfCreators"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"27"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#primaryDocumentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedIn"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournal"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournalVolume"},"value":{"type":"literal","value":"abs/2607.14935"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInStream"},"value":{"type":"uri","value":"https://dblp.org/streams/journals/corr"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#title"},"value":{"type":"literal","value":"VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding."}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-14935"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#yearOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gYear","type":"literal","value":"2026"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn54961847"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://purl.org/spar/datacite/hasIdentifier"},"value":{"type":"bnode","value":"bn54961858"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Informal"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},"value":{"type":"uri","value":"https://dblp.org/rdf/schema#Publication"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://www.w3.org/2000/01/rdf-schema#label"},"value":{"type":"literal","value":"Yuhan Zhu et al.: TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs. (2026)"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"http://dx.doi.org/10.48550/ARXIV.2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"http://www.w3.org/2002/07/owl#sameAs"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/119/2630"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/135/8484"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/22/7839"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/29/4190-106"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/333/4073"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/49/8410"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/96/3374"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#authoredBy"},"value":{"type":"uri","value":"https://dblp.org/pid/98/5109"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#bibtexType"},"value":{"type":"uri","value":"http://purl.org/net/nknouf/ns/bibtex#Article"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/06/8405-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/119/2630"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/135/8484"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/185/0727"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/206/3491-4"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/22/7839"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/287/3124"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/29/4190-106"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/312/7634"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/333/4073"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/397/9243"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/49/8410"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/68/6610-2"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/96/3374"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#createdBy"},"value":{"type":"uri","value":"https://dblp.org/pid/98/5109"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#documentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#doi"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961870"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961881"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961892"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961903"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961914"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961925"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961936"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961947"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961958"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961969"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961981"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54961992"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54962003"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54962014"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#hasSignature"},"value":{"type":"bnode","value":"bn54962025"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#listedOnTocPage"},"value":{"type":"uri","value":"https://dblp.org/db/journals/corr/corr2607"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#monthOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gMonth","type":"literal","value":"--07"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#numberOfCreators"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#int","type":"literal","value":"15"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#primaryDocumentPage"},"value":{"type":"uri","value":"https://doi.org/10.48550/ARXIV.2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedIn"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournal"},"value":{"type":"literal","value":"CoRR"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInJournalVolume"},"value":{"type":"literal","value":"abs/2607.17423"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#publishedInStream"},"value":{"type":"uri","value":"https://dblp.org/streams/journals/corr"}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#title"},"value":{"type":"literal","value":"TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs."}},{"p":{"type":"uri","value":"https://dblp.org/rec/journals/corr/abs-2607-17423"},"property":{"type":"uri","value":"https://dblp.org/rdf/schema#yearOfPublication"},"value":{"datatype":"http://www.w3.org/2001/XMLSchema#gYear","type":"literal","value":"2026"}}]},"meta":{"query-time-ms":6,"result-size-total":231}}
+\ No newline at end of file
+diff --git a/metadata/catalog-update-20261107/extra-requests.json b/metadata/catalog-update-20261107/extra-requests.json
+new file mode 100644
+index 0000000..bea78c2
+--- /dev/null
++++ b/metadata/catalog-update-20261107/extra-requests.json
+@@ -0,0 +1,12 @@
++{
++  "requests": [
++    {
++      "url": "https://sparql.dblp.org/sparql?query=SELECT+%3Fp+%3Fproperty+%3Fvalue+WHERE+%7B+VALUES+%3Fp+%7B+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2607-17423%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2610-18615%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2607-14935%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2610-01762%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2606-14777%3E+%7D+%3Fp+%3Fproperty+%3Fvalue+.+%7D&format=json",
++      "status": 200
++    },
++    {
++      "url": "https://sparql.dblp.org/sparql?query=PREFIX+dblp%3A+%3Chttps%3A%2F%2Fdblp.org%2Frdf%2Fschema%23%3E+SELECT+%3Fp+%3Fname+%3Fordinal+WHERE+%7B+VALUES+%3Fp+%7B+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2607-17423%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2610-18615%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2607-14935%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2610-01762%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2606-14777%3E+%7D+%3Fp+dblp%3AhasSignature+%3Fs+.+%3Fs+dblp%3AsignatureDblpName+%3Fname+%3B+dblp%3AsignatureOrdinal+%3Fordinal+.+%7D+ORDER+BY+%3Fp+%3Fordinal&format=json",
++      "status": 200
++    }
++  ]
++}
+diff --git a/metadata/catalog-update-20261107/proceedings.json b/metadata/catalog-update-20261107/proceedings.json
+new file mode 100644
+index 0000000..fc2a71f
+--- /dev/null
++++ b/metadata/catalog-update-20261107/proceedings.json
+@@ -0,0 +1,246 @@
++{
++  "publication_author_evidence": [
++    {
++      "paper_url": "https://proceedings.mlr.press/v306/zhu26ba.html",
++      "source_url": "https://proceedings.mlr.press/v306/zhu26ba.html",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2509-24621",
++      "title": "FreeRet: MLLMs as Training-Free Retrievers",
++      "authors": [
++        "Yuhan Zhu",
++        "Xiangyu Zeng",
++        "Chenting Wang",
++        "Xinhao Li",
++        "Chunxu Liu",
++        "Yicheng Xu",
++        "Ziang Yan",
++        "Yi Wang",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "ICML",
++      "publisher": "PMLR",
++      "volume": "306",
++      "pages": "167936-167952",
++      "retrieved_on": "2026-11-07",
++      "citation_metadata": [
++        {
++          "name": "citation_publisher",
++          "content": "PMLR"
++        },
++        {
++          "name": "citation_title",
++          "content": "FreeRet: MLLMs as Training-Free Retrievers"
++        },
++        {
++          "name": "citation_language",
++          "content": "en"
++        },
++        {
++          "name": "citation_abstract_html_url",
++          "content": "https://proceedings.mlr.press/v306/zhu26ba.html"
++        },
++        {
++          "name": "citation_pdf_url",
++          "content": "https://raw.githubusercontent.com/mlresearch/v306/main/assets/zhu26ba/zhu26ba.pdf"
++        },
++        {
++          "name": "citation_firstpage",
++          "content": "167936"
++        },
++        {
++          "name": "citation_lastpage",
++          "content": "167952"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yuhan Zhu"
++        },
++        {
++          "name": "citation_author",
++          "content": "Xiangyu Zeng"
++        },
++        {
++          "name": "citation_author",
++          "content": "Chenting Wang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Xinhao Li"
++        },
++        {
++          "name": "citation_author",
++          "content": "Chunxu Liu"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yicheng Xu"
++        },
++        {
++          "name": "citation_author",
++          "content": "Ziang Yan"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yi Wang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Limin Wang"
++        },
++        {
++          "name": "citation_publication_date",
++          "content": "2026/09/29"
++        },
++        {
++          "name": "citation_inbook_title",
++          "content": "International Conference on Machine Learning"
++        },
++        {
++          "name": "citation_conference_title",
++          "content": "International Conference on Machine Learning"
++        },
++        {
++          "name": "citation_issn",
++          "content": "2640-3498"
++        }
++      ]
++    },
++    {
++      "paper_url": "https://proceedings.mlr.press/v306/zeng26y.html",
++      "source_url": "https://proceedings.mlr.press/v306/zeng26y.html",
++      "dblp_url": "https://dblp.org/rec/journals/corr/abs-2601-23224",
++      "title": "Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning",
++      "authors": [
++        "Xiangyu Zeng",
++        "Zhiqiu Zhang",
++        "Yuhan Zhu",
++        "Xinhao Li",
++        "Zikang Wang",
++        "Changlian Ma",
++        "Qingyu Zhang",
++        "Zizheng Huang",
++        "Kun Ouyang",
++        "Tianxiang Jiang",
++        "Ziang Yan",
++        "Yi Wang",
++        "Hongjie Zhang",
++        "Yali Wang",
++        "Limin Wang"
++      ],
++      "year": 2026,
++      "publication_year": 2026,
++      "venue": "ICML",
++      "publisher": "PMLR",
++      "volume": "306",
++      "pages": "153787-153813",
++      "retrieved_on": "2026-11-07",
++      "citation_metadata": [
++        {
++          "name": "citation_publisher",
++          "content": "PMLR"
++        },
++        {
++          "name": "citation_title",
++          "content": "Video-o3: Native Interleaved Clue Seeking for Long Video Multi-Hop Reasoning"
++        },
++        {
++          "name": "citation_language",
++          "content": "en"
++        },
++        {
++          "name": "citation_abstract_html_url",
++          "content": "https://proceedings.mlr.press/v306/zeng26y.html"
++        },
++        {
++          "name": "citation_pdf_url",
++          "content": "https://raw.githubusercontent.com/mlresearch/v306/main/assets/zeng26y/zeng26y.pdf"
++        },
++        {
++          "name": "citation_firstpage",
++          "content": "153787"
++        },
++        {
++          "name": "citation_lastpage",
++          "content": "153813"
++        },
++        {
++          "name": "citation_author",
++          "content": "Xiangyu Zeng"
++        },
++        {
++          "name": "citation_author",
++          "content": "Zhiqiu Zhang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yuhan Zhu"
++        },
++        {
++          "name": "citation_author",
++          "content": "Xinhao Li"
++        },
++        {
++          "name": "citation_author",
++          "content": "Zikang Wang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Changlian Ma"
++        },
++        {
++          "name": "citation_author",
++          "content": "Qingyu Zhang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Zizheng Huang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Kun Ouyang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Tianxiang Jiang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Ziang Yan"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yi Wang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Hongjie Zhang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Yali Wang"
++        },
++        {
++          "name": "citation_author",
++          "content": "Limin Wang"
++        },
++        {
++          "name": "citation_publication_date",
++          "content": "2026/09/29"
++        },
++        {
++          "name": "citation_inbook_title",
++          "content": "International Conference on Machine Learning"
++        },
++        {
++          "name": "citation_conference_title",
++          "content": "International Conference on Machine Learning"
++        },
++        {
++          "name": "citation_issn",
++          "content": "2640-3498"
++        }
++      ]
++    }
++  ]
++}
+diff --git a/metadata/catalog-update-20261107/requests.json b/metadata/catalog-update-20261107/requests.json
+new file mode 100644
+index 0000000..c982a78
+--- /dev/null
++++ b/metadata/catalog-update-20261107/requests.json
+@@ -0,0 +1,13 @@
++{
++  "queried_on": "2026-11-07",
++  "requests": [
++    {
++      "url": "https://sparql.dblp.org/sparql?query=SELECT+%3Fp+%3Fproperty+%3Fvalue+WHERE+%7B+VALUES+%3Fp+%7B+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2509-24621%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2601-23224%3E+%7D+%3Fp+%3Fproperty+%3Fvalue+.+%7D&format=json",
++      "status": 200
++    },
++    {
++      "url": "https://sparql.dblp.org/sparql?query=PREFIX+dblp%3A+%3Chttps%3A%2F%2Fdblp.org%2Frdf%2Fschema%23%3E+SELECT+%3Fp+%3Fname+%3Fordinal+WHERE+%7B+VALUES+%3Fp+%7B+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2509-24621%3E+%3Chttps%3A%2F%2Fdblp.org%2Frec%2Fjournals%2Fcorr%2Fabs-2601-23224%3E+%7D+%3Fp+dblp%3AhasSignature+%3Fs+.+%3Fs+dblp%3AsignatureDblpName+%3Fname+%3B+dblp%3AsignatureOrdinal+%3Fordinal+.+%7D+ORDER+BY+%3Fp+%3Fordinal&format=json",
++      "status": 200
++    }
++  ]
++}
+diff --git a/scripts/render_catalog.py b/scripts/render_catalog.py
+index 887d571..218f954 100644
+--- a/scripts/render_catalog.py
++++ b/scripts/render_catalog.py
+@@ -49,7 +49,7 @@ def validate(data):
+         for record in p['dblp_records']:
+             assert record not in seen_records, f"DBLP version assigned twice: {record}"
+             seen_records.add(record)
+-        for field in ['paper_url', 'dblp_url', 'code_url', 'code_source', 'publication_source']:
++        for field in ['paper_url', 'dblp_url', 'code_url', 'code_source', 'publication_source', 'publication_author_source']:
+             if field in p:
+                 parsed = urlparse(p[field])
+                 assert parsed.scheme in {'http', 'https'} and parsed.netloc, (p['id'], field)
+@@ -64,17 +64,51 @@ def validate(data):
+     }, 'Manuscript subset lost during catalog maintenance'
+ 
+ 
++def proceedings_authors(p, source_names, evidence):
++    """Verify an explicitly selected final author list against PMLR evidence."""
++    source = p['publication_author_source']
++    parsed = urlparse(source)
++    assert parsed.scheme == 'https' and parsed.netloc == 'proceedings.mlr.press'
++    assert p['publication_status'] == 'proceedings'
++    assert '/journals/corr/' in p['dblp_url'], 'Author override is limited to a DBLP preprint identity'
++    assert source == p.get('publication_source') == p['paper_url']
++    record = evidence.get(source)
++    assert record, 'Final authors require saved proceedings evidence'
++    assert record['source_url'] == source and record['publisher'] == 'PMLR'
++    assert record['dblp_url'] == p['dblp_url'] and record['title'] == p['title']
++    assert record['year'] == p['year'] and record['venue'] == p['venue']
++    authors = record['authors']
++    assert authors and all(isinstance(name, str) and name.strip() for name in authors)
++    citation = {}
++    for item in record['citation_metadata']:
++        citation.setdefault(item['name'], []).append(item['content'])
++    assert citation.get('citation_publisher') == ['PMLR']
++    assert citation.get('citation_title') == [p['title']]
++    assert citation.get('citation_abstract_html_url') == [source]
++    assert citation.get('citation_author') == authors
++    remaining = iter(authors)
++    for name in source_names:
++        assert any(candidate == name for candidate in remaining), 'DBLP authors must retain their relative order'
++    return authors
++
++
+ def validate_evidence(data):
+     """Match each catalog identity and author sequence to saved DBLP responses."""
+     snapshot = json.loads((ROOT / 'metadata/dblp-audit-20261015/verified-records.json').read_text())
+     titles = {r['dblp_url']: {t.rstrip('.') for t in r['properties']['title']} for r in snapshot}
+     names = {r['dblp_url']: {int(a['ordinal']): a['name'] for a in r['authors']} for r in snapshot}
++    publication_evidence = {}
+     for meta in sorted((ROOT / 'metadata').glob('catalog-update-*')):
+         fresh_names = {}
+         for path in sorted(meta.glob('*.json')):
+             response = json.loads(path.read_text())
+             if not isinstance(response, dict):
+                 continue
++            for publication in response.get('publication_author_evidence', []):
++                source = publication['paper_url']
++                previous = publication_evidence.get(source)
++                assert previous is None or previous == publication, f'Conflicting proceedings evidence: {source}'
++                publication_evidence[source] = publication
+             for row in response.get('results', {}).get('bindings', []):
+                 if 'property' in row and row['property']['value'].endswith('#title'):
+                     titles.setdefault(row['p']['value'], set()).add(row['value']['value'].rstrip('.'))
+@@ -90,7 +124,8 @@ def validate_evidence(data):
+         record = p['dblp_url']
+         assert p['title'] in titles.get(record, set()), f'Title does not match source: {record}'
+         source_names = [re.sub(r' \d{4}$', '', name) for _, name in sorted(names[record].items())]
+-        assert source_names == p['authors'], f'Authors do not match source: {record}'
++        final_names = proceedings_authors(p, source_names, publication_evidence) if p.get('publication_author_source') else source_names
++        assert final_names == p['authors'], f'Authors do not match source: {record}'
+         assert all(version in titles for version in p['dblp_records']), f'Unverified version: {record}'
+         assert set(names[record]) == set(range(1, len(source_names) + 1)), f'Missing author ordinal: {record}'
+ 
+diff --git a/tests/test_publication_authors.py b/tests/test_publication_authors.py
+new file mode 100644
+index 0000000..cbc7c9c
+--- /dev/null
++++ b/tests/test_publication_authors.py
+@@ -0,0 +1,116 @@
++import copy
++import importlib.util
++import json
++import tempfile
++import unittest
++from pathlib import Path
++from unittest.mock import patch
++
++
++spec = importlib.util.spec_from_file_location('render_catalog', Path(__file__).resolve().parents[1] / 'scripts/render_catalog.py')
++catalog = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(catalog)
++
++
++class PublicationAuthorsTest(unittest.TestCase):
++    def setUp(self):
++        self.directory = tempfile.TemporaryDirectory()
++        self.addCleanup(self.directory.cleanup)
++        self.root = Path(self.directory.name)
++        snapshot = self.root / 'metadata/dblp-audit-20261015'
++        snapshot.mkdir(parents=True)
++        self.record = 'https://dblp.org/rec/journals/corr/abs-2501-00001'
++        self.url = 'https://proceedings.mlr.press/v306/example26.html'
++        self.title = 'A test retrieval paper'
++        (snapshot / 'verified-records.json').write_text(json.dumps([{
++            'dblp_url': self.record,
++            'properties': {'title': [self.title]},
++            'authors': [{'ordinal': 1, 'name': 'Alice'}, {'ordinal': 2, 'name': 'Bob'}],
++        }]))
++        self.metadata = self.root / 'metadata/catalog-update-test'
++        self.metadata.mkdir()
++        self.paper = {
++            'dblp_url': self.record, 'dblp_records': [self.record], 'title': self.title,
++            'authors': ['Alice', 'Carol', 'Bob'], 'publication_status': 'proceedings',
++            'publication_source': self.url, 'publication_author_source': self.url,
++            'paper_url': self.url, 'year': 2026, 'venue': 'ICML',
++        }
++        self.evidence = {
++            'paper_url': self.url, 'source_url': self.url, 'publisher': 'PMLR',
++            'dblp_url': self.record, 'title': self.title,
++            'authors': ['Alice', 'Carol', 'Bob'], 'year': 2026, 'venue': 'ICML',
++            'citation_metadata': [
++                {'name': 'citation_publisher', 'content': 'PMLR'},
++                {'name': 'citation_title', 'content': self.title},
++                {'name': 'citation_abstract_html_url', 'content': self.url},
++            ] + [{'name': 'citation_author', 'content': name} for name in ['Alice', 'Carol', 'Bob']],
++        }
++
++    def check(self, paper=None, evidence=None):
++        (self.metadata / 'proceedings.json').write_text(json.dumps({
++            'publication_author_evidence': [] if evidence is False else [evidence or self.evidence],
++        }))
++        with patch.object(catalog, 'ROOT', self.root):
++            catalog.validate_evidence({'papers': [paper or self.paper]})
++
++    def test_verified_proceedings_can_add_an_author(self):
++        self.check()
++
++    def test_dblp_authors_remain_the_default(self):
++        paper = copy.deepcopy(self.paper)
++        del paper['publication_author_source']
++        with self.assertRaises(AssertionError):
++            self.check(paper)
++        paper['authors'] = ['Alice', 'Bob']
++        self.check(paper)
++
++    def test_missing_or_unrelated_evidence_fails(self):
++        with self.assertRaises(AssertionError):
++            self.check(evidence=False)
++        for field, value in [('dblp_url', self.record + '-other'), ('title', 'Another paper'), ('publisher', 'Unknown')]:
++            with self.subTest(field=field):
++                evidence = copy.deepcopy(self.evidence)
++                evidence[field] = value
++                with self.assertRaises(AssertionError):
++                    self.check(evidence=evidence)
++
++    def test_unsupported_author_changes_fail(self):
++        paper = copy.deepcopy(self.paper)
++        paper['authors'] = ['Alice', 'Mallory', 'Bob']
++        with self.assertRaises(AssertionError):
++            self.check(paper)
++        for authors in [['Alice', 'Carol'], ['Bob', 'Carol', 'Alice']]:
++            with self.subTest(authors=authors):
++                paper = copy.deepcopy(self.paper)
++                evidence = copy.deepcopy(self.evidence)
++                paper['authors'] = evidence['authors'] = authors
++                evidence['citation_metadata'] = [item for item in evidence['citation_metadata'] if item['name'] != 'citation_author']
++                evidence['citation_metadata'] += [{'name': 'citation_author', 'content': name} for name in authors]
++                with self.assertRaises(AssertionError):
++                    self.check(paper, evidence)
++
++    def test_unverified_dblp_identity_fails(self):
++        paper = copy.deepcopy(self.paper)
++        paper['dblp_url'] += '-unverified'
++        with self.assertRaises(AssertionError):
++            self.check(paper)
++
++    def test_proceedings_citation_metadata_must_match(self):
++        for field in ['citation_title', 'citation_abstract_html_url', 'citation_author']:
++            with self.subTest(field=field):
++                evidence = copy.deepcopy(self.evidence)
++                next(item for item in evidence['citation_metadata'] if item['name'] == field)['content'] = 'Unsupported value'
++                with self.assertRaises(AssertionError):
++                    self.check(evidence=evidence)
++
++    def test_override_requires_matching_formal_pmlr_source(self):
++        for field, value in [('publication_status', 'preprint'), ('publication_source', self.url + '?other'), ('paper_url', 'https://arxiv.org/abs/2501.00001')]:
++            with self.subTest(field=field):
++                paper = copy.deepcopy(self.paper)
++                paper[field] = value
++                with self.assertRaises(AssertionError):
++                    self.check(paper)
++
++
++if __name__ == '__main__':
++    unittest.main()
